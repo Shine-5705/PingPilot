@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { ChevronDown, ChevronLeft, ChevronRight, Copy, ExternalLink, Eye, X } from 'lucide-react'
+import { ChevronDown, ChevronLeft, ChevronRight, Copy, ExternalLink, Eye, Sparkles, X } from 'lucide-react'
 import { Button } from '../components/ui/Button'
 import { Card, CardContent, CardHeader } from '../components/ui/Card'
 import { Input, Select } from '../components/ui/FormControls'
@@ -54,15 +54,24 @@ export default function ContactsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-semibold text-slate-900">Contacts</h2>
-        <p className="mt-1 text-sm text-slate-500">
-          CRM-style view of enriched people with email and LinkedIn links.
-        </p>
-      </div>
+      <section className="reference-panel overflow-hidden bg-gradient-to-br from-white via-white to-blue-50/40 p-6">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <p className="section-kicker">Contacts</p>
+            <h2 className="font-display mt-2 text-3xl font-bold text-slate-950">CRM table</h2>
+            <p className="mt-2 max-w-2xl text-sm leading-7 text-slate-500">
+              CRM-style view of enriched people with email and LinkedIn links.
+            </p>
+          </div>
+          <div className="inline-flex items-center gap-2 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700 ring-1 ring-brand-100">
+            <Sparkles size={14} />
+            Enriched and scored
+          </div>
+        </div>
+      </section>
 
-      <Card>
-        <CardHeader className="flex flex-wrap items-center justify-between gap-3">
+      <Card className="overflow-hidden">
+        <CardHeader className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 bg-slate-50/70">
           <div className="flex flex-1 flex-wrap items-center gap-3">
             <Input
               placeholder="Search name, role, company"
@@ -94,82 +103,87 @@ export default function ContactsPage() {
             </Select>
           </div>
         </CardHeader>
-        <CardContent className="overflow-x-auto p-0">
-          <table className="w-full min-w-[950px] text-left text-sm">
-            <thead className="bg-slate-50 text-slate-600">
-              <tr>
-                <th className="px-4 py-3 font-medium">Name</th>
-                <th className="px-4 py-3 font-medium">Role</th>
-                <th className="px-4 py-3 font-medium">Company</th>
-                <th className="px-4 py-3 font-medium">LinkedIn</th>
-                <th className="px-4 py-3 font-medium">Email</th>
-                <th className="px-4 py-3 font-medium">AI Message</th>
-                <th className="px-4 py-3 font-medium">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {paged.map((contact) => (
-                <tr key={contact.id} className="border-t border-slate-100 hover:bg-slate-50/70">
-                  <td className="px-4 py-3">
-                    <p className="font-medium text-slate-900">{contact.name}</p>
-                    <p className="text-xs text-slate-500">Match score: {contact.score}%</p>
-                  </td>
-                  <td className="px-4 py-3 text-slate-700">{contact.role}</td>
-                  <td className="px-4 py-3 text-slate-700">{contact.company}</td>
-                  <td className="px-4 py-3">
-                    <a
-                      href={contact.linkedin}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-1 text-indigo-600 hover:text-indigo-500"
-                    >
-                      Profile
-                      <ExternalLink size={14} />
-                    </a>
-                  </td>
-                  <td className="px-4 py-3">
-                    <button
-                      onClick={() => copyText(contact.email, 'Email')}
-                      className="inline-flex items-center gap-1 rounded-lg bg-slate-100 px-2 py-1 text-slate-700 hover:bg-slate-200"
-                    >
-                      <Copy size={14} />
-                      Copy
-                    </button>
-                  </td>
-                  <td className="px-4 py-3">
-                    <button
-                      onClick={() => setSelected(contact)}
-                      className="inline-flex items-center gap-1 rounded-lg bg-indigo-50 px-2 py-1 text-indigo-700 hover:bg-indigo-100"
-                    >
-                      <Eye size={14} />
-                      View
-                    </button>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="relative inline-flex">
-                      <select
-                        value={contact.status}
-                        onChange={(e) => updateStatus(contact.id, e.target.value)}
-                        className="appearance-none rounded-xl border border-slate-300 bg-white px-3 py-1.5 pr-8 text-xs text-slate-700 focus:border-indigo-500 focus:outline-none"
-                      >
-                        {statuses.map((status) => (
-                          <option key={status} value={status}>
-                            {status}
-                          </option>
-                        ))}
-                      </select>
-                      <ChevronDown
-                        size={14}
-                        className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-slate-400"
-                      />
-                    </div>
-                  </td>
+        <CardContent className="p-0">
+          <div className="custom-scrollbar max-h-[68vh] overflow-auto">
+            <table className="w-full min-w-[950px] text-left text-sm">
+              <thead className="sticky top-0 z-10 bg-slate-50 text-slate-600">
+                <tr>
+                  <th className="px-4 py-3 font-medium">Name</th>
+                  <th className="px-4 py-3 font-medium">Role</th>
+                  <th className="px-4 py-3 font-medium">Company</th>
+                  <th className="px-4 py-3 font-medium">LinkedIn</th>
+                  <th className="px-4 py-3 font-medium">Email</th>
+                  <th className="px-4 py-3 font-medium">AI Message</th>
+                  <th className="px-4 py-3 font-medium">Status</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {paged.map((contact) => (
+                  <tr
+                    key={contact.id}
+                    className="border-t border-slate-100 transition hover:bg-slate-50/80"
+                  >
+                    <td className="px-4 py-3">
+                      <p className="font-medium text-slate-900">{contact.name}</p>
+                      <p className="text-xs text-slate-500">Match score: {contact.score}%</p>
+                    </td>
+                    <td className="px-4 py-3 text-slate-700">{contact.role}</td>
+                    <td className="px-4 py-3 text-slate-700">{contact.company}</td>
+                    <td className="px-4 py-3">
+                      <a
+                        href={contact.linkedin}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1 text-indigo-600 hover:text-indigo-500"
+                      >
+                        Profile
+                        <ExternalLink size={14} />
+                      </a>
+                    </td>
+                    <td className="px-4 py-3">
+                      <button
+                        onClick={() => copyText(contact.email, 'Email')}
+                        className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-1 text-slate-700 transition hover:bg-slate-200"
+                      >
+                        <Copy size={14} />
+                        Copy
+                      </button>
+                    </td>
+                    <td className="px-4 py-3">
+                      <button
+                        onClick={() => setSelected(contact)}
+                        className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2 py-1 text-brand-700 transition hover:bg-brand-100"
+                      >
+                        <Eye size={14} />
+                        View
+                      </button>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="relative inline-flex">
+                        <select
+                          value={contact.status}
+                          onChange={(e) => updateStatus(contact.id, e.target.value)}
+                          className="appearance-none rounded-xl border border-slate-300 bg-white px-3 py-1.5 pr-8 text-xs text-slate-700 transition-colors duration-200 focus:border-brand-500 focus:outline-none"
+                        >
+                          {statuses.map((status) => (
+                            <option key={status} value={status}>
+                              {status}
+                            </option>
+                          ))}
+                        </select>
+                        <ChevronDown
+                          size={14}
+                          className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-slate-400"
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
-          <div className="flex items-center justify-between border-t border-slate-100 px-4 py-3">
+          <div className="flex items-center justify-between border-t border-slate-100 bg-slate-50/60 px-4 py-3">
             <p className="text-xs text-slate-500">
               Showing {(page - 1) * pageSize + 1}-{Math.min(page * pageSize, filteredSorted.length)} of{' '}
               {filteredSorted.length}
@@ -210,7 +224,7 @@ export default function ContactsPage() {
           className={`absolute inset-0 bg-slate-900/30 transition ${selected ? 'opacity-100' : 'opacity-0'}`}
         />
         <aside
-          className={`absolute right-0 top-0 h-full w-full max-w-xl overflow-y-auto bg-white p-6 shadow-2xl transition-transform duration-300 ${
+          className={`custom-scrollbar absolute right-0 top-0 h-full w-full max-w-xl overflow-y-auto bg-white p-6 shadow-2xl transition-transform duration-300 ${
             selected ? 'translate-x-0' : 'translate-x-full'
           }`}
         >
@@ -227,7 +241,7 @@ export default function ContactsPage() {
                 </button>
               </div>
 
-              <Card>
+              <Card className="overflow-hidden">
                 <CardHeader>
                   <h4 className="text-sm font-semibold text-slate-900">Why this person was selected</h4>
                 </CardHeader>
@@ -236,7 +250,7 @@ export default function ContactsPage() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="overflow-hidden">
                 <CardHeader className="flex items-center justify-between gap-3">
                   <h4 className="text-sm font-semibold text-slate-900">Personalized email</h4>
                   <Button variant="secondary" className="gap-1 px-2 py-1 text-xs" onClick={() => copyText(selected.emailMessage, 'Email message')}>
@@ -249,7 +263,7 @@ export default function ContactsPage() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="overflow-hidden">
                 <CardHeader className="flex items-center justify-between gap-3">
                   <h4 className="text-sm font-semibold text-slate-900">LinkedIn message</h4>
                   <Button variant="secondary" className="gap-1 px-2 py-1 text-xs" onClick={() => copyText(selected.linkedinMessage, 'LinkedIn message')}>
