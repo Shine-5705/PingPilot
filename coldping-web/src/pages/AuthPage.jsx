@@ -1,4 +1,5 @@
 import { Globe } from 'lucide-react'
+import { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '../components/ui/Button'
 import { Card, CardContent, CardHeader } from '../components/ui/Card'
@@ -7,8 +8,15 @@ import { Input, Label } from '../components/ui/FormControls'
 export default function AuthPage() {
   const navigate = useNavigate()
 
+  useEffect(() => {
+    if (localStorage.getItem('coldping_authenticated') === 'true') {
+      navigate('/app/dashboard', { replace: true })
+    }
+  }, [navigate])
+
   const onSubmit = (event) => {
     event.preventDefault()
+    localStorage.setItem('coldping_authenticated', 'true')
     navigate('/app/dashboard')
   }
 
@@ -19,9 +27,12 @@ export default function AuthPage() {
     const scope = import.meta.env.VITE_GOOGLE_OAUTH_SCOPE || 'openid email profile'
 
     if (!clientId) {
+      localStorage.setItem('coldping_authenticated', 'true')
       navigate('/app/dashboard')
       return
     }
+
+    sessionStorage.setItem('google_oauth_started', 'true')
 
     const params = new URLSearchParams({
       client_id: clientId,

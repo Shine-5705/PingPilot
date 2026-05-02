@@ -15,6 +15,7 @@ export default function SignUpPage() {
 
   const onSubmit = (event) => {
     event.preventDefault()
+    localStorage.setItem('coldping_authenticated', 'true')
     navigate('/app/dashboard')
   }
 

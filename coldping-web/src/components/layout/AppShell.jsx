@@ -13,7 +13,7 @@ import {
   BarChart3,
   Sparkles,
 } from 'lucide-react'
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { Button } from '../ui/Button'
 import { Input } from '../ui/FormControls'
 
@@ -29,6 +29,8 @@ const navItems = [
 export default function AppShell() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
   const searchRef = useRef(null)
+
+  const navigate = useNavigate()
 
   const navClassName = ({ isActive }) =>
     `group flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm transition-all duration-300 ease-in-out ${
@@ -120,14 +122,24 @@ export default function AppShell() {
             </div>
 
             <div className="flex items-center gap-2 md:gap-3">
-              <Button className="gap-2 px-3 py-2 text-xs md:text-sm transition-all duration-300 ease-in-out hover:-translate-y-0.5">
+              <Button
+                className="gap-2 px-3 py-2 text-xs md:text-sm transition-all duration-300 ease-in-out hover:-translate-y-0.5"
+                onClick={() => navigate('/app/campaigns')}
+              >
                 <Plus size={14} />
                 New Campaign
               </Button>
-              <button className="rounded-full p-2 text-gray-500 transition-all duration-300 ease-in-out hover:bg-gray-100 hover:text-gray-700">
+              <button
+                className="rounded-full p-2 text-gray-500 transition-all duration-300 ease-in-out hover:bg-gray-100 hover:text-gray-700"
+                aria-label="Notifications"
+              >
                 <Bell size={18} />
               </button>
-              <div className="h-9 w-9 rounded-full bg-gradient-to-br from-brand-500 to-blue-light-500" />
+              <button
+                onClick={() => navigate('/app/settings')}
+                aria-label="Open profile settings"
+                className="h-9 w-9 rounded-full bg-gradient-to-br from-brand-500 to-blue-light-500 focus:outline-none"
+              />
             </div>
           </header>
           <main className="flex-1 overflow-y-auto bg-gray-50/70 p-4 md:p-6">

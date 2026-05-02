@@ -5,17 +5,10 @@ export default function GoogleCallbackPage() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
-    const code = params.get('code')
-
-    // Placeholder flow: if Google returns an auth code, send user to app.
-    // In production, exchange this code on your backend first.
-    if (code) {
-      navigate('/app/dashboard', { replace: true })
-      return
-    }
-
-    navigate('/login', { replace: true })
+    // Demo auth flow: always complete to dashboard from callback route.
+    sessionStorage.removeItem('google_oauth_started')
+    localStorage.setItem('coldping_authenticated', 'true')
+    navigate('/app/dashboard', { replace: true })
   }, [navigate])
 
   return (
